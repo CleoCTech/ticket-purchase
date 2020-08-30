@@ -4,12 +4,13 @@ namespace Tests\Feature;
 
 use App\Concert;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ViewConcertListingTest extends TestCase
 {
-
+        use DatabaseMigrations;
        /** @test */
        public function user_can_view_a_concert_listing()
        {
@@ -25,7 +26,7 @@ class ViewConcertListingTest extends TestCase
                     //1.Create a concert ->so that there's a concert for a user to view
 
                     $concert = Concert::create([
-                        'title' => 'Through Thick & Thin (TNT)',
+                        'title' => 'TNT',
                         'subtitle' => 'with Njugush and Celestine',
                         'date' => Carbon::parse('February 14, 2020 8:00pm'),
                         'ticket_price' => 2050,
@@ -41,20 +42,20 @@ class ViewConcertListingTest extends TestCase
             //Action Phase->actual code that we wanna test:
                 //Here we're testing if a user can view the concert listing:
                     //1.View the concert listing
-                    $this->visit('/concerts/'.$concert->id);
-
+                    $response =  $this->get('/concerts/'.$concert->id);
+                   //$response->assertStatus(200);
             //Assert Phase->where we make assertions about what happens to verify that we had the outcome that we expected:
                 //Assertain that we have actual seen the concert details:
                     //1.See the concert details
-                    $this->see('Through Thick & Thin (TNT)');
-                    $this->see('with Njugush and Celestine');
-                    $this->see('February 14, 2020');
-                    $this->see('8:00pm');
-                    $this->see('20.50');
-                    $this->see('Garden City');
-                    $this->see('0142 Thika Road');
-                    $this->see('Nairobi, Kasarani 4120');
-                    $this->see('For tickets, call (0727 057 310).');
+                    $response->assertSee('TNT');
+                    $response->assertSee('with Njugush and Celestine');
+                    $response->assertSee('February 14, 2020');
+                    $response->assertSee('8:00pm');
+                    $response->assertSee('20.50');
+                    $response->assertSee('Garden City');
+                    $response->assertSee('0142 Thika Road');
+                    $response->assertSee('Nairobi, Kasarani 4120');
+                    $response->assertSee('For tickets, call (0727 057 310).');
 
        }
 
